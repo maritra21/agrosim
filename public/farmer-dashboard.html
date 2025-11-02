@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farmer Dashboard - AgroConnect</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="container navbar">
+      <a href="/" class="logo">🌾 AgroConnect</a>
+      <ul class="nav-links">
+        <li><span id="userName" style="color: var(--text-dark); font-weight: 600;"></span></li>
+        <li><a href="#" id="notificationBtn" style="position: relative;">
+          🔔 <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+        </a></li>
+        <li><a href="#" onclick="logout()" class="btn btn-danger btn-sm">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="dashboard container">
+    <div class="dashboard-header">
+      <h1>Farmer Dashboard</h1>
+      <button class="btn btn-primary" onclick="openAddProductModal()">+ Add Product</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Products</h3>
+        <div class="stat-value" id="totalProducts">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Orders</h3>
+        <div class="stat-value" id="totalOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Pending Orders</h3>
+        <div class="stat-value" id="pendingOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Earnings</h3>
+        <div class="stat-value" id="totalEarnings">BDT 0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>My Products</h2>
+      </div>
+      <div id="productsContainer" class="product-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Recent Orders</h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Buyer</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="addProductModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add New Product</h2>
+        <button class="close-btn" onclick="closeAddProductModal()">&times;</button>
+      </div>
+      <form id="addProductForm">
+        <div class="form-group">
+          <label for="productName">Product Name</label>
+          <input type="text" id="productName" required>
+        </div>
+        <div class="form-group">
+          <label for="productCategory">Category</label>
+          <select id="productCategory" required>
+            <option value="Vegetables">Vegetables</option>
+            <option value="Fruits">Fruits</option>
+            <option value="Grains">Grains</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="productDescription">Description</label>
+          <textarea id="productDescription" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="productPrice">Price per Kg (BDT)</label>
+          <input type="number" id="productPrice" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="productQuantity">Available Quantity (Kg)</label>
+          <input type="number" id="productQuantity" step="0.1" required>
+        </div>
+        <div class="form-group">
+          <label for="harvestDate">Harvest Date</label>
+          <input type="date" id="harvestDate">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Add Product</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="editProductModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Product</h2>
+        <button class="close-btn" onclick="closeEditProductModal()">&times;</button>
+      </div>
+      <form id="editProductForm">
+        <input type="hidden" id="editProductId">
+        <div class="form-group">
+          <label for="editProductName">Product Name</label>
+          <input type="text" id="editProductName" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductCategory">Category</label>
+          <select id="editProductCategory" required>
+            <option value="Vegetables">Vegetables</option>
+            <option value="Fruits">Fruits</option>
+            <option value="Grains">Grains</option>
+            <option value="Dairy">Dairy</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editProductDescription">Description</label>
+          <textarea id="editProductDescription" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="editProductPrice">Price per Kg (BDT)</label>
+          <input type="number" id="editProductPrice" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductQuantity">Available Quantity (Kg)</label>
+          <input type="number" id="editProductQuantity" step="0.1" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductStatus">Status</label>
+          <select id="editProductStatus" required>
+            <option value="available">Available</option>
+            <option value="out_of_stock">Out of Stock</option>
+            <option value="discontinued">Discontinued</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editHarvestDate">Harvest Date</label>
+          <input type="date" id="editHarvestDate">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Update Product</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="notificationModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Notifications</h2>
+        <button class="close-btn" onclick="closeNotificationModal()">&times;</button>
+      </div>
+      <div id="notificationsContainer"></div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/farmer-dashboard.js"></script>
+</body>
+</html>

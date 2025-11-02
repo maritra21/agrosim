@@ -1,0 +1,99 @@
+AGROCONNECT - MySQL Setup & Admin Login Fix
+==============================================
+
+PROBLEM: "Invalid credentials" when trying to login as admin
+
+SOLUTION: The admin password hash in the database needs to be updated.
+
+IMPORTANT: MySQL must be installed and running on your system!
+
+STEPS TO FIX:
+=============
+
+1. ENSURE MYSQL IS RUNNING
+   ---------------------------
+   Check if MySQL is running:
+
+   Windows:
+   - Open Services (services.msc)
+   - Look for "MySQL" or "MySQL80"
+   - Ensure it's "Running"
+   - If not, right-click and select "Start"
+
+   Mac:
+   - Run: brew services list
+   - Start MySQL: brew services start mysql
+
+   Linux:
+   - Run: sudo systemctl status mysql
+   - Start MySQL: sudo systemctl start mysql
+
+2. UPDATE YOUR .env FILE
+   ---------------------------
+   Make sure your .env file has these settings:
+
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=YOUR_MYSQL_ROOT_PASSWORD
+   DB_NAME=agroconnect
+   DB_PORT=3306
+
+   JWT_SECRET=agroconnect_super_secret_jwt_key_change_in_production_2025
+   PORT=3000
+
+   Replace YOUR_MYSQL_ROOT_PASSWORD with your actual MySQL root password.
+   If you don't have a password, leave it empty: DB_PASSWORD=
+
+3. SETUP DATABASE (First Time Only)
+   ---------------------------
+   Run this command to create the database and tables:
+
+   npm run setup-db
+
+4. FIX ADMIN PASSWORD
+   ---------------------------
+   Run this command to update/create the admin user with correct password:
+
+   npm run fix-admin
+
+5. START THE SERVER
+   ---------------------------
+   npm start
+
+6. LOGIN AS ADMIN
+   ---------------------------
+   Open your browser: http://localhost:3000/login
+
+   Email: admin@agroconnect.com
+   Password: admin123
+
+TROUBLESHOOTING:
+================
+
+Error: "ECONNREFUSED 127.0.0.1:3306"
+- MySQL is not running. Follow step 1 above.
+
+Error: "Access denied for user 'root'"
+- Your DB_PASSWORD in .env is incorrect
+- Update it with the correct MySQL root password
+
+Error: "Unknown database 'agroconnect'"
+- Run: npm run setup-db
+
+Still getting "Invalid credentials"?
+- Run: npm run fix-admin
+- This will update the admin password hash in the database
+
+PASSWORD HASH EXPLANATION:
+==========================
+The correct hash for "admin123" is:
+$2a$10$nCOwyJXX5R2.FTLmIg4Rd.hB6xne6GL3dgAK271LfXwrCh7Q.yB8G
+
+This has been updated in:
+- setup-database.js (for new installations)
+- fix-admin-password.js (to fix existing databases)
+
+SUMMARY:
+========
+The authentication issue was caused by an incorrect bcrypt password hash in the database.
+The hash didn't match "admin123" password. This has now been fixed.

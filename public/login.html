@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - AgroConnect</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2>Welcome Back</h2>
+
+      <div id="errorMessage" class="alert alert-error" style="display: none;"></div>
+      <div id="successMessage" class="alert alert-success" style="display: none;"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Login</button>
+      </form>
+
+      <p style="text-align: center; margin-top: 24px; color: var(--text-medium);">
+        Don't have an account? <a href="/register" style="color: var(--primary); font-weight: 600;">Register here</a>
+      </p>
+
+      <p style="text-align: center; margin-top: 16px; color: var(--text-light); font-size: 14px;">
+        <a href="/" style="color: var(--text-medium);">← Back to Home</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      hideMessage('errorMessage');
+      hideMessage('successMessage');
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showMessage('errorMessage', data.error || 'Login failed');
+          return;
+        }
+
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        showMessage('successMessage', 'Login successful! Redirecting...');
+
+        setTimeout(() => {
+          if (data.user.role === 'farmer') {
+            window.location.href = '/farmer-dashboard';
+          } else if (data.user.role === 'buyer') {
+            window.location.href = '/buyer-dashboard';
+          } else if (data.user.role === 'admin') {
+            window.location.href = '/admin-dashboard';
+          }
+        }, 1000);
+
+      } catch (error) {
+        showMessage('errorMessage', 'Network error. Please try again.');
+      }
+    });
+
+    function showMessage(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.style.display = 'block';
+    }
+
+    function hideMessage(elementId) {
+      document.getElementById(elementId).style.display = 'none';
+    }
+  </script>
+</body>
+</html>

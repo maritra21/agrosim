@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buyer Dashboard - AgroConnect</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="container navbar">
+      <a href="/" class="logo">🌾 AgroConnect</a>
+      <ul class="nav-links">
+        <li><span id="userName" style="color: var(--text-dark); font-weight: 600;"></span></li>
+        <li><a href="#" id="cartBtn" style="position: relative;">
+          🛒 <span id="cartBadge" class="notification-badge" style="display: none;">0</span>
+        </a></li>
+        <li><a href="#" id="notificationBtn" style="position: relative;">
+          🔔 <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
+        </a></li>
+        <li><a href="#" onclick="logout()" class="btn btn-danger btn-sm">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="dashboard container">
+    <div class="dashboard-header">
+      <h1>Buyer Dashboard</h1>
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="searchInput" placeholder="Search products..." style="padding: 10px; border: 1px solid var(--border); border-radius: 6px; width: 250px;">
+        <select id="categoryFilter" style="padding: 10px; border: 1px solid var(--border); border-radius: 6px;">
+          <option value="">All Categories</option>
+          <option value="Vegetables">Vegetables</option>
+          <option value="Fruits">Fruits</option>
+          <option value="Grains">Grains</option>
+          <option value="Dairy">Dairy</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Orders</h3>
+        <div class="stat-value" id="totalOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Pending Orders</h3>
+        <div class="stat-value" id="pendingOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Spent</h3>
+        <div class="stat-value" id="totalSpent">BDT 0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Available Products</h3>
+        <div class="stat-value" id="availableProducts">0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Available Products</h2>
+      </div>
+      <div id="productsContainer" class="product-grid"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>My Orders</h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Farmer</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="cartModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Shopping Cart</h2>
+        <button class="close-btn" onclick="closeCartModal()">&times;</button>
+      </div>
+      <div id="cartItemsContainer"></div>
+      <div style="margin-top: 24px; padding-top: 24px; border-top: 2px solid var(--border);">
+        <h3>Delivery Details</h3>
+        <div class="form-group">
+          <label for="deliveryAddress">Delivery Address</label>
+          <textarea id="deliveryAddress" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="deliveryDate">Preferred Delivery Date</label>
+          <input type="date" id="deliveryDate">
+        </div>
+        <div class="form-group">
+          <label for="orderNotes">Order Notes (Optional)</label>
+          <textarea id="orderNotes" rows="2"></textarea>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
+          <h3>Total: <span id="cartTotal">BDT 0.00</span></h3>
+          <button class="btn btn-primary" onclick="placeOrder()">Place Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notificationModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Notifications</h2>
+        <button class="close-btn" onclick="closeNotificationModal()">&times;</button>
+      </div>
+      <div id="notificationsContainer"></div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/buyer-dashboard.js"></script>
+</body>
+</html>

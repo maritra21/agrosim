@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - AgroConnect</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2>Join AgroConnect</h2>
+
+      <div id="errorMessage" class="alert alert-error" style="display: none;"></div>
+      <div id="successMessage" class="alert alert-success" style="display: none;"></div>
+
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required minlength="6">
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" required>
+        </div>
+
+        <div class="form-group">
+          <label for="role">I am a</label>
+          <select id="role" required>
+            <option value="">Select your role</option>
+            <option value="farmer">Farmer</option>
+            <option value="buyer">Buyer (Restaurant/Shop Owner)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="village">Village/Area</label>
+          <input type="text" id="village" required>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Full Address</label>
+          <textarea id="address" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Register</button>
+      </form>
+
+      <p style="text-align: center; margin-top: 24px; color: var(--text-medium);">
+        Already have an account? <a href="/login" style="color: var(--primary); font-weight: 600;">Login here</a>
+      </p>
+
+      <p style="text-align: center; margin-top: 16px; color: var(--text-light); font-size: 14px;">
+        <a href="/" style="color: var(--text-medium);">← Back to Home</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        phone: document.getElementById('phone').value,
+        role: document.getElementById('role').value,
+        village: document.getElementById('village').value,
+        address: document.getElementById('address').value
+      };
+
+      hideMessage('errorMessage');
+      hideMessage('successMessage');
+
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          showMessage('errorMessage', data.error || 'Registration failed');
+          return;
+        }
+
+        showMessage('successMessage', 'Registration successful! Your account is pending approval. You will be notified once approved.');
+
+        document.getElementById('registerForm').reset();
+
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 3000);
+
+      } catch (error) {
+        showMessage('errorMessage', 'Network error. Please try again.');
+      }
+    });
+
+    function showMessage(elementId, message) {
+      const element = document.getElementById(elementId);
+      element.textContent = message;
+      element.style.display = 'block';
+    }
+
+    function hideMessage(elementId) {
+      document.getElementById(elementId).style.display = 'none';
+    }
+  </script>
+</body>
+</html>

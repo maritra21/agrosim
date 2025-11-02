@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - AgroConnect</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav class="container navbar">
+      <a href="/" class="logo">🌾 AgroConnect</a>
+      <ul class="nav-links">
+        <li><span id="userName" style="color: var(--text-dark); font-weight: 600;"></span></li>
+        <li><a href="#" onclick="logout()" class="btn btn-danger btn-sm">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="dashboard container">
+    <div class="dashboard-header">
+      <h1>Admin Dashboard - Control Tower</h1>
+      <button class="btn btn-primary" onclick="openBroadcastModal()">📢 Send Broadcast</button>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Farmers</h3>
+        <div class="stat-value" id="totalFarmers">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Buyers</h3>
+        <div class="stat-value" id="totalBuyers">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Pending Approvals</h3>
+        <div class="stat-value" id="pendingUsers">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Active Products</h3>
+        <div class="stat-value" id="activeProducts">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Orders</h3>
+        <div class="stat-value" id="totalOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Pending Orders</h3>
+        <div class="stat-value" id="pendingOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Revenue</h3>
+        <div class="stat-value" id="totalRevenue">BDT 0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>User Management</h2>
+        <div>
+          <select id="roleFilter" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px; margin-right: 8px;">
+            <option value="">All Roles</option>
+            <option value="farmer">Farmers</option>
+            <option value="buyer">Buyers</option>
+          </select>
+          <select id="statusFilter" style="padding: 8px; border: 1px solid var(--border); border-radius: 6px;">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="active">Active</option>
+            <option value="suspended">Suspended</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Village</th>
+              <th>Status</th>
+              <th>Registered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>All Orders</h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Buyer</th>
+              <th>Farmer</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2>Broadcast History</h2>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Message</th>
+              <th>Target</th>
+              <th>Sent By</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="broadcastsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="broadcastModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Send Broadcast Message</h2>
+        <button class="close-btn" onclick="closeBroadcastModal()">&times;</button>
+      </div>
+      <form id="broadcastForm">
+        <div class="form-group">
+          <label for="broadcastTitle">Title</label>
+          <input type="text" id="broadcastTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="broadcastMessage">Message</label>
+          <textarea id="broadcastMessage" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="broadcastTarget">Send To</label>
+          <select id="broadcastTarget" required>
+            <option value="all">All Users</option>
+            <option value="farmer">All Farmers</option>
+            <option value="buyer">All Buyers</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Broadcast</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/admin-dashboard.js"></script>
+</body>
+</html>
