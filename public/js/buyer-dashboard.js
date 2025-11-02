@@ -67,7 +67,10 @@ function displayProducts(products) {
         <h3>${product.name}</h3>
         <div class="product-price">${formatCurrency(product.price_per_kg)}/kg</div>
         <div class="product-meta">Available: ${product.available_quantity} ${product.unit}</div>
-        <div class="product-meta">Farmer: ${product.farmer_name}</div>
+        <div class="product-meta">
+          Farmer: ${product.farmer_name}
+          <button class="btn btn-sm" style="padding: 2px 8px; margin-left: 8px;" onclick="startChatWithFarmer(${product.farmer_id}, '${product.farmer_name}')">Chat</button>
+        </div>
         <div class="product-meta">Village: ${product.village}</div>
         ${product.description ? `<p style="font-size: 14px; color: var(--text-medium); margin-top: 8px;">${product.description}</p>` : ''}
         <div class="product-actions">

@@ -15,6 +15,9 @@
         <li><a href="#" id="cartBtn" style="position: relative;">
           🛒 <span id="cartBadge" class="notification-badge" style="display: none;">0</span>
         </a></li>
+        <li><a href="#" id="chatBtn" style="position: relative;">
+          💬 <span id="chatBadge" class="notification-badge" style="display: none;">0</span>
+        </a></li>
         <li><a href="#" id="notificationBtn" style="position: relative;">
           🔔 <span id="notificationBadge" class="notification-badge" style="display: none;">0</span>
         </a></li>
@@ -126,7 +129,34 @@
     </div>
   </div>
 
+  <div id="chatModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2>Messages</h2>
+        <button class="close-btn" onclick="closeChatModal()">&times;</button>
+      </div>
+      <div class="chat-container">
+        <div class="chat-sidebar">
+          <h3>Conversations</h3>
+          <div id="conversationsList"></div>
+        </div>
+        <div class="chat-main">
+          <div id="chatPlaceholder" class="chat-placeholder">
+            <div class="chat-placeholder-icon">💬</div>
+            <p>Select a conversation to start chatting</p>
+          </div>
+          <div id="chatMessages" class="chat-messages" style="display: none;"></div>
+          <div id="chatInputContainer" class="chat-input-container" style="display: none;">
+            <input type="text" id="chatMessageInput" placeholder="Type a message..." />
+            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="js/auth.js"></script>
   <script src="js/buyer-dashboard.js"></script>
+  <script src="js/chat.js"></script>
 </body>
 </html>

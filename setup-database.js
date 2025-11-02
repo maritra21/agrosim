@@ -113,6 +113,36 @@ CREATE TABLE IF NOT EXISTS broadcast_messages (
   INDEX idx_created (created_at)
 );
 
+CREATE TABLE IF NOT EXISTS chat_conversations (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  buyer_id INT NOT NULL,
+  farmer_id INT NOT NULL,
+  last_message TEXT,
+  last_message_at TIMESTAMP NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (farmer_id) REFERENCES users(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_conversation (buyer_id, farmer_id),
+  INDEX idx_buyer (buyer_id),
+  INDEX idx_farmer (farmer_id),
+  INDEX idx_last_message (last_message_at)
+);
+
+CREATE TABLE IF NOT EXISTS chat_messages (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  conversation_id INT NOT NULL,
+  sender_id INT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (conversation_id) REFERENCES chat_conversations(id) ON DELETE CASCADE,
+  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_conversation (conversation_id),
+  INDEX idx_sender (sender_id),
+  INDEX idx_read (is_read),
+  INDEX idx_created (created_at)
+);
+
 INSERT INTO users (name, email, password, role, address, village, status)
 VALUES ('Admin User', 'admin@agroconnect.com', '$2a$10$nCOwyJXX5R2.FTLmIg4Rd.hB6xne6GL3dgAK271LfXwrCh7Q.yB8G', 'admin', 'GEC Circle, Chattogram', 'Chattogram', 'active')
 ON DUPLICATE KEY UPDATE password='$2a$10$nCOwyJXX5R2.FTLmIg4Rd.hB6xne6GL3dgAK271LfXwrCh7Q.yB8G';
